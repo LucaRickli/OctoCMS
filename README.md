@@ -1,6 +1,6 @@
 # OctoCMS
 
-Github + Markdown + Zod powered static serverless content managment system.
+Github + Markdown + Zod powered static serverless content management system.
 
 ## Recommended IDE Setup
 
