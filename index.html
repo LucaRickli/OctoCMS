@@ -16,10 +16,11 @@
         backend: {
           repo: "www.rickli.cloud",
           owner: "lucarickli",
-          auth: function auth() {
+          // no arguments passed by app
+          auth: async function (retry = false) {
+            if (retry) await new Promise((r) => setTimeout(r, 2000));
             const input = prompt("GitHub Token");
-            if (!input?.length) return auth();
-            return input;
+            return input?.length ? input : this.auth(true);
           },
         },
         collections: [

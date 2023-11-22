@@ -16,7 +16,12 @@ export const backendOptions = z.object({
   owner: z.string(),
   baseUrl: z.string().optional(),
   session: sessionOptions.default({}),
-  auth: z.function().returns(z.string().min(1)),
+  auth: z.function().returns(
+    z
+      .string()
+      .min(1)
+      .or(z.promise(z.string().min(1)))
+  ),
 });
 
 export type Frontmatter = GetZodType<typeof frontmatter>;
