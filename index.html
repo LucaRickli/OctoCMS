@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OctoCMS</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import CMS, { z } from "/src/main.ts";
+
+      const cms = new CMS({
+        target: document.body,
+        backend: {
+          repo: "www.rickli.cloud",
+          owner: "lucarickli",
+          auth: function auth() {
+            const input = prompt("GitHub Token");
+            if (!input?.length) return auth();
+            return input;
+          },
+        },
+        collections: [
+          {
+            type: "dir",
+            name: "Blog",
+            path: "src/content/blog",
+            actions: {
+              create: true,
+              delete: true,
+            },
+            frontmatter: {
+              test: z.string().optional().readonly(),
+              num: z.number().default(99),
+              date: z.date(),
+            },
+          },
+          {
+            type: "file",
+            name: "Pages",
+            actions: {
+              delete: true,
+            },
+            files: [
+              {
+                name: "datenschutz",
+                path: "src/pages/datenschutz.md",
+              },
+              {
+                name: "impressum",
+                path: "src/pages/impressum.md",
+              },
+            ],
+          },
+        ],
+      });
+    </script>
+  </body>
+</html>
