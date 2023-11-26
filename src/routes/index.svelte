@@ -1,9 +1,35 @@
 <script lang="ts">
-  import { writable } from "svelte/store";
+  import { get, writable } from "svelte/store";
   import { Collections } from "../store/config";
+  import { getCollectionFiles } from "../store/collections";
+  import { formatBytes } from "../lib/utils";
 
   const selected = writable<string>()
+  const files = writable<Awaited<ReturnType<typeof getCollectionFiles>> | undefined>()
+
+  selected.subscribe(async (sel) => {
+    console.log({ selected: sel })
+    const collection = get(Collections).find(i => i.name === sel)    
+    files.set(!collection ? undefined : await getCollectionFiles(collection))
+  })
 </script>
+
+
+<!-- <ul class="p-2">
+  {#each $Collections as collection, index}
+  <li 
+    class="font-bold list-disc mx-3"
+    class:text-blue-600={$selected === index}
+    >
+    <button
+      on:click={() => $selected = index}
+      on:keydown={() => $selected = index}
+    >
+      {collection.name}
+    </button>
+  </li>
+  {/each}
+</ul> -->
 
 <select 
   bind:value={$selected} 
@@ -16,23 +42,29 @@
   {/each}
 </select>
 
-<table class="table-auto w-full border">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Size</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each $Collections as collection}
-    <tr class="table-separator">
-      <td class="!p-0">
-        <a href="#">{collection.name}</a>
-      </td>
-      <td class="!p-0">
-        <a href="#">-</a>
-      </td>
-    </tr>
-    {/each}
-  </tbody>
-</table>
+<div class="overflow-x-scroll">
+  <table class="table-auto w-full">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Path</th>
+        <th>Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#if $files}
+      {#each $files as file}
+        <tr class="table-separator">
+          <td>{file.name}</td>
+          <td>{file.path}</td>
+          {#if file.type === "internal_file"}
+          <td>-</td>
+          {:else}
+          <td>{formatBytes(file.size)}</td>
+          {/if}
+        </tr>
+      {/each}
+      {/if}
+    </tbody>
+  </table>
+</div>

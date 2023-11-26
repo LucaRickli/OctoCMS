@@ -20,7 +20,7 @@ export async function initSession(backendOpt: BackendOptions) {
     const token = backendOpt.session.storage.getItem(backendOpt.session.key);
     if (token) Token.set(token);
   } catch (err) {
-    console.error("Failed to load token!");
+    console.error(new Error("Failed to load token!"));
     console.time("initSession");
     throw err;
   }
@@ -33,10 +33,9 @@ export async function initSession(backendOpt: BackendOptions) {
     return token;
   }
 
-  const auth = get(Token);
-  if (!auth) await triggerAuth();
-
-  const octo = new Octokit({ auth, baseUrl: backendOpt.baseUrl });
+  let auth = get(Token);
+  if (!auth) auth = await triggerAuth();
+  const octo = new Octokit({ auth, baseUrl: backendOpt.git.baseUrl });
   Octo.set(octo);
 
   // change to check if open access is enabled (maybe git org implementation?)
@@ -54,7 +53,7 @@ export async function initSession(backendOpt: BackendOptions) {
         backendOpt.session.storage.removeItem(backendOpt.session.key);
 
         const auth = await triggerAuth();
-        Octo.set(new Octokit({ auth, baseUrl: backendOpt.baseUrl }));
+        Octo.set(new Octokit({ auth, baseUrl: backendOpt.git.baseUrl }));
         return initUser();
       }
     }
@@ -71,5 +70,5 @@ Token.subscribe((token) => {
 });
 
 // dev
-Token.subscribe((token) => console.log({ token }));
+// Token.subscribe((token) => console.log({ token }));
 User.subscribe((user) => console.log({ user }));

@@ -14,8 +14,10 @@
       const cms = new CMS({
         target: document.body,
         backend: {
-          repo: "www.rickli.cloud",
-          owner: "lucarickli",
+          git: {
+            repo: "www.rickli.cloud",
+            owner: "lucarickli",
+          },
           // no arguments passed by app
           auth: async function (retry = false) {
             if (retry) await new Promise((r) => setTimeout(r, 2000));

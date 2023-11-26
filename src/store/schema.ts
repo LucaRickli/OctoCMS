@@ -12,9 +12,11 @@ export const sessionOptions = z.object({
 
 export type BackendOptions = GetZodType<typeof backendOptions>;
 export const backendOptions = z.object({
-  repo: z.string(),
-  owner: z.string(),
-  baseUrl: z.string().optional(),
+  git: z.object({
+    repo: z.string(),
+    owner: z.string(),
+    baseUrl: z.string().optional(),
+  }),
   session: sessionOptions.default({}),
   auth: z.function().returns(
     z
@@ -38,6 +40,18 @@ export const collectionFile = z.object({
   path: z.string().min(1),
   name: z.string().min(1),
 });
+
+export type InternalCollectionFile = GetZodType<typeof internalCollectionFile>;
+export const internalCollectionFile = z
+  .object({
+    type: z.literal("internal_file").default("internal_file"),
+  })
+  .and(collectionFile);
+
+export type InternalCollectionFileSet = GetZodType<
+  typeof internalCollectionFileSet
+>;
+export const internalCollectionFileSet = z.array(internalCollectionFile);
 
 export type FileCollection = GetZodType<typeof fileCollection>;
 export const fileCollection = z

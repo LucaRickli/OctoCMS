@@ -14,7 +14,6 @@
   export let backend: BackendOptions;
   export let collections: CollectionsOptions;
 
-  // const validateConfig = (): Promise<CMSOptions> => cmsOptions.parseAsync({ backend, collections })
   async function init(): Promise<CMSOptions> {
     const cfg = initCofing({ backend, collections })
     await initSession(cfg.backend)
