@@ -1,23 +1,36 @@
 @tailwind base;
 @layer base {
+  html,
+  body,
+  main {
+    height: 100%;
+  }
+  main > * {
+    padding: 8px;
+  }
 }
 
 @tailwind components;
 @layer components {
   table.table-auto {
+    @apply w-full;
     & > tbody > tr.table-separator {
       @apply border-t;
     }
-
     & > thead > tr > th,
     & > tbody > tr > td {
       @apply text-left py-1.5 px-2.5;
     }
-    & > tbody > tr > td > a {
-      @apply block w-full h-full py-1.5 px-2.5;
+  }
+  table.table-selectable > tbody > tr {
+    @apply hover:bg-gray-200;
+    & > td {
+      @apply !p-0;
+      & > a {
+        @apply block w-full h-full py-1.5 px-2.5;
+      }
     }
   }
-
   select.selector {
     @apply py-2 px-2 pe-9 block w-full rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-transparent border;
   }
@@ -25,12 +38,20 @@
 
 @tailwind utilities;
 @layer utilities {
-  *.overflow-x-scroll::-webkit-scrollbar-track {
+  .overflow-y-scroll::-webkit-scrollbar-track,
+  .overflow-x-scroll::-webkit-scrollbar-track {
     background: transparent;
   }
-  *.overflow-x-scroll {
+  .overflow-y-scroll,
+  .overflow-x-scroll {
     scrollbar-width: thin;
     scrollbar-color: gray transparent;
     scrollbar-border: unset;
+  }
+  .grid-auto-100 {
+    grid-template-columns: repeat(auto-fill, 100px);
+  }
+  .grid-auto-250 {
+    grid-template-columns: repeat(auto-fill, 250px);
   }
 }

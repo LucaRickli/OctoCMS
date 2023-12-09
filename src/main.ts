@@ -1,12 +1,13 @@
 import "./app.css"; // works in mode dev only!
 
 import App from "./App.svelte";
-import type { CMSOptions } from "./store/schema";
+import type { CmsOptions } from "./store/schema";
 
 export * as z from "zod";
 
-type AppConfig = ConstructorParameters<typeof App>[0];
-type CmsConfig = AppConfig & CMSOptions;
+export type * as Schema from "./store/schema";
+export type AppConfig = ConstructorParameters<typeof App>[0];
+export type CmsConfig = AppConfig & CmsOptions;
 
 export default class CMS extends App {
   constructor(cfg: CmsConfig) {
@@ -26,4 +27,4 @@ export default class CMS extends App {
   }
 }
 
-export { App, type AppConfig, type CmsConfig };
+export { App };

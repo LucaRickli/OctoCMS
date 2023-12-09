@@ -1,8 +1,9 @@
 import { get, writable } from "svelte/store";
-import type { BackendOptions } from "./schema";
 import { Octokit } from "@octokit/rest";
 import { RequestError } from "@octokit/request-error";
+
 import { Backend } from "./config";
+import type { BackendOptions } from "./schema";
 
 export const Octo = writable<Octokit>();
 
@@ -28,7 +29,6 @@ export async function initSession(backendOpt: BackendOptions) {
   async function triggerAuth() {
     const token = await backendOpt.auth();
     if (!token) return triggerAuth();
-    // backendOpt.session.storage.setItem(backendOpt.session.key, token);
     Token.set(token);
     return token;
   }
@@ -38,28 +38,26 @@ export async function initSession(backendOpt: BackendOptions) {
   const octo = new Octokit({ auth, baseUrl: backendOpt.git.baseUrl });
   Octo.set(octo);
 
-  // change to check if open access is enabled (maybe git org implementation?)
-  if (true) {
-    async function initUser() {
-      try {
-        const user = await get(Octo).rest.users.getAuthenticated();
-        User.set(user.data);
-      } catch (err) {
-        if (!(err instanceof RequestError) || err.status !== 401) {
-          throw err;
-        }
-
-        Token.set(undefined);
-        backendOpt.session.storage.removeItem(backendOpt.session.key);
-
-        const auth = await triggerAuth();
-        Octo.set(new Octokit({ auth, baseUrl: backendOpt.git.baseUrl }));
-        return initUser();
+  async function initUser() {
+    try {
+      const user = await get(Octo).rest.users.getAuthenticated();
+      User.set(user.data);
+    } catch (err) {
+      if (!(err instanceof RequestError) || err.status !== 401) {
+        throw err;
       }
-    }
 
-    await initUser();
+      Token.set(undefined);
+      backendOpt.session.storage.removeItem(backendOpt.session.key);
+
+      const auth = await triggerAuth();
+      Octo.set(new Octokit({ auth, baseUrl: backendOpt.git.baseUrl }));
+      return initUser();
+    }
   }
+
+  // change to check if open access is enabled (maybe git org implementation?)
+  if (true) await initUser();
 
   console.timeEnd("initSession");
 }

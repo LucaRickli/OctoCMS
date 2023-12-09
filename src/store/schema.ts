@@ -1,8 +1,6 @@
 import * as z from "zod";
 
-export type GetZodType<T extends import("zod").ZodType> = ReturnType<
-  T["parse"]
->;
+type GetZodType<T extends import("zod").ZodType> = ReturnType<T["parse"]>;
 
 export type SessionOptions = GetZodType<typeof sessionOptions>;
 export const sessionOptions = z.object({
@@ -86,10 +84,7 @@ export const collectionType = z.union([fileCollection, folderCollection]);
 export type CollectionsOptions = GetZodType<typeof collectionsOptions>;
 export const collectionsOptions = z.array(collectionType).min(1);
 
-export interface CMSOptions {
-  backend: BackendOptions;
-  collections: CollectionsOptions;
-}
+export type CmsOptions = GetZodType<typeof cmsOptions>;
 export const cmsOptions = z.object({
   backend: backendOptions,
   collections: collectionsOptions,
