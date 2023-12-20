@@ -1,7 +1,7 @@
 <script lang="ts">
   import Router from 'svelte-spa-router'
 
-  import type { BackendOptions, CmsOptions, CollectionsOptions } from "./store/schema";
+  import type { BackendOptions, CmsOptions, CollectionsOptions, StorageOptions } from "./store/schema";
   import { initCofing } from "./store/config";
   import { initSession } from "./store/session";
   import Error from "./components/Error.svelte";
@@ -9,6 +9,7 @@
   import NotFound from './routes/notFound.svelte';
   import Collection from './routes/collection.svelte';
   import File from './routes/file.svelte';
+  import Edit from './routes/edit.svelte';
   
   const routes = {
     "/": Index,
@@ -17,15 +18,18 @@
 
     "/file": File,
 
+    "/edit": Edit,
+
     "*": NotFound
   }
 
   export let backend: BackendOptions;
   export let collections: CollectionsOptions;
+  export let storage: StorageOptions | undefined = undefined;
 
   async function init(): Promise<CmsOptions> {
-    const cfg = initCofing({ backend, collections })
-    await initSession(cfg.backend)
+    const cfg = initCofing({ backend, collections, storage })
+    await initSession(cfg.backend, cfg.storage.session)
     return cfg
   }
 </script>

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { Collections } from "../store/config";
+  import { Base64 } from "../lib/utils";
+  
   // import { get, writable } from "svelte/store";
   // import { getCollectionFiles } from "../store/collections";
   // import { formatBytes } from "../lib/utils";
@@ -14,12 +16,11 @@
   // })
 </script>
 
-
 <ul class="grid grid-auto-100 gap-2">
   {#each $Collections as collection}
     <li class="aspect-square hover:bg-gray-200">
       <a 
-        href="#/collection?name={encodeURIComponent(collection.name)}"
+        href="#/collection?ref={Base64.urlEncode({ name: collection.name })}"
         class="w-full h-full flex items-center justify-center text-center"
       >
       <div class="w-[100px] p-2">

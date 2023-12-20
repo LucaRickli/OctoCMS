@@ -1,11 +1,17 @@
 import * as z from "zod";
 
-type GetZodType<T extends import("zod").ZodType> = ReturnType<T["parse"]>;
+export type GetZodType<T extends import("zod").ZodType> = ReturnType<
+  T["parse"]
+>;
 
-export type SessionOptions = GetZodType<typeof sessionOptions>;
-export const sessionOptions = z.object({
-  storage: z.instanceof(Storage).default(sessionStorage),
-  key: z.string().default("cms:octo:token"),
+export type StorageOptions = GetZodType<typeof storageOptions>;
+export const storageOptions = z.object({
+  session: z
+    .object({
+      location: z.instanceof(Storage).default(sessionStorage),
+      git_token_key: z.string().default("cms:octo:token"),
+    })
+    .default({}),
 });
 
 export type BackendOptions = GetZodType<typeof backendOptions>;
@@ -15,7 +21,6 @@ export const backendOptions = z.object({
     owner: z.string(),
     baseUrl: z.string().optional(),
   }),
-  session: sessionOptions.default({}),
   auth: z.function().returns(
     z
       .string()
@@ -88,4 +93,5 @@ export type CmsOptions = GetZodType<typeof cmsOptions>;
 export const cmsOptions = z.object({
   backend: backendOptions,
   collections: collectionsOptions,
+  storage: storageOptions.default({}),
 });

@@ -48,5 +48,10 @@ export async function getFileInfo(path: string) {
       ...get(Backend).git,
       path,
     })
-    .then(({ data }) => data);
+    .then(({ data }) => {
+      if (Array.isArray(data) || data.type !== "file") {
+        throw new Error("Expected file!");
+      }
+      return data;
+    });
 }

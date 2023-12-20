@@ -14,6 +14,7 @@
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@tailwindcss/typography": "^0.5.10",
     "@tsconfig/svelte": "^5.0.0",
+    "@types/commonmark": "^0.27.9",
     "@types/node": "^20.8.10",
     "autoprefixer": "^10.4.16",
     "cssnano": "^6.0.1",
@@ -30,7 +31,10 @@
     "@octokit/request-error": "^5.0.1",
     "@octokit/rest": "^20.0.2",
     "@orama/orama": "^2.0.0-beta.7",
+    "commonmark": "^0.30.0",
+    "monaco-editor": "^0.45.0",
     "svelte-spa-router": "^3.3.0",
+    "yaml": "^2.3.4",
     "zod": "^3.22.4"
   }
 }

@@ -5,18 +5,20 @@ import {
   type BackendOptions,
   type CmsOptions,
   type CollectionsOptions,
+  type StorageOptions,
 } from "./schema";
 
 export const Backend = writable<BackendOptions>();
 export const Collections = writable<CollectionsOptions>();
+export const Storage = writable<StorageOptions>();
 
-export function initCofing(config: CmsOptions): CmsOptions {
+export function initCofing(config: object): CmsOptions {
   console.time("initConfig");
 
-  const { backend, collections } = cmsOptions.parse(config);
-  Backend.set(backend);
-  Collections.set(collections);
+  const cfg = cmsOptions.parse(config);
+  Backend.set(cfg.backend);
+  Collections.set(cfg.collections);
 
   console.timeEnd("initConfig");
-  return { backend, collections };
+  return cfg;
 }

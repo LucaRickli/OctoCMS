@@ -2,6 +2,9 @@
   import { ZodError } from "zod";
 
   export let err: unknown
+  if (!(err instanceof ZodError)) {
+    console.error('Critical error:', err)
+  }
 </script>
 
 {#if err instanceof ZodError}
