@@ -5,6 +5,7 @@
   import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
   import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
   import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+  import Loading from "./Loading.svelte";
 
   const dispatch = createEventDispatcher()
   const observer = new ResizeObserver(() => resizeEditor())
@@ -59,10 +60,7 @@
 
     window.requestAnimationFrame(resizeEditor);
 
-    if (editorEl.parentElement) {
-      console.log('observing parent element', editorEl.parentElement)
-      observer.observe(editorEl.parentElement)
-    }
+    if (editorEl.parentElement) observer.observe(editorEl.parentElement)
   }
 
   export function resizeEditor() {
@@ -86,9 +84,5 @@
 <div bind:this={editorEl} class="h-full w-full !p-0" />
 
 {#await loadEditor()}
-  <div class="h-full w-full absolute bg-white flex items-center justify-center">
-    <div>
-      Loading
-    </div>
-  </div>  
+  <Loading />
 {/await}

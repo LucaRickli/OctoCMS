@@ -42,11 +42,12 @@ export async function getFile(collection: CollectionType, fileName: string) {
   return files.find((i) => i.name === fileName);
 }
 
-export async function getFileInfo(path: string) {
+export async function getFileInfo(path: string, ref?: string) {
   return get(Octo)
     .repos.getContent({
       ...get(Backend).git,
       path,
+      ref,
     })
     .then(({ data }) => {
       if (Array.isArray(data) || data.type !== "file") {
@@ -54,4 +55,14 @@ export async function getFileInfo(path: string) {
       }
       return data;
     });
+}
+
+export async function getFileVersions(path?: string, sha?: string) {
+  return get(Octo)
+    .repos.listCommits({
+      ...get(Backend).git,
+      path,
+      sha,
+    })
+    .then(({ data }) => data);
 }

@@ -1,4 +1,4 @@
-import { object, type ZodSchema } from "zod";
+import type { ZodSchema } from "zod";
 import { parse } from "yaml";
 
 export function formatBytes(bytes: number, decimals = 2) {
@@ -30,7 +30,11 @@ export function parseFrontmatter<T extends object>(
   content: string
 ): { content: string; frontmatter?: T } {
   const result = frontmatterRegex.exec(content);
-  if (result?.length !== 2) throw new Error("Failed to parse frontmatter.");
+  if (result?.length !== 2) {
+    throw new Error("Failed to parse frontmatter.", {
+      cause: `Expected to get a array containing 2 items. Got ${result?.length} items instead.`,
+    });
+  }
   return {
     frontmatter: parse(result[1]),
     content: content.replace(frontmatterRegex, ""),

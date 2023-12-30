@@ -10,6 +10,7 @@
   import Collection from './routes/collection.svelte';
   import File from './routes/file.svelte';
   import Edit from './routes/edit.svelte';
+  import Loading from './components/Loading.svelte';
   
   const routes = {
     "/": Index,
@@ -34,15 +35,17 @@
   }
 </script>
 
-<main>
-  {#await init()}
-    <div>Loading...</div>
-  {:then}
-    <Router {routes} />
-  {:catch err}
-    <Error {err} />
-  {/await}
-</main>
+{#await init()}
+  <Loading />
+{:then}
+  <Router {routes} />
+{:catch err}
+  <main>
+    <Error {err}>
+      <h1 slot="zod_title">Configuration error!</h1>
+    </Error>
+  </main>
+{/await}
 
 
 
